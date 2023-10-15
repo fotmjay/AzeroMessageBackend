@@ -1,38 +1,29 @@
-const Message = require("../models/Message");
+import Message from "../models/Message";
 import { Request, Response } from "express";
 import { fetchLatestWasmTransactions } from "../helpers/fetchLatestWasmTransactions";
 import { requestEventOnChain } from "../helpers/requestEventOnChain";
+import { TimestampBlock } from "sample-polkadotjs-typegen/types/ApiTypes";
+import { CONSTANT } from "../constants/constants";
 
 module.exports = {
   getMessagesByReceiver: async (req: Request, res: Response) => {
-    console.log("received");
-    const data: number[] = await fetchLatestWasmTransactions();
-    requestEventOnChain(data);
-    res.send("end");
-    //   const data = await Message.find({ owner: user.id }).sort({ firstName: "asc" }).lean();
-    //   res
-    //     .status(200)
-    //     .json({ success: true, refreshToken: refreshToken, message: "Tenant data available sent.", data: data });
+    try {
+      const data: TimestampBlock[] = await fetchLatestWasmTransactions();
+      requestEventOnChain(data);
+      const receiver = req.params.address.toLowerCase();
+      const messagesForReceiver = await Message.find({ to: receiver }).sort("-timestamp").lean();
+      res.status(200).json({ success: true, data: messagesForReceiver });
+    } catch (err) {
+      res.status(CONSTANT.HTTPRESPONSE.CODE.INTERNAL_ERROR).json({ success: false, error: `${err._message}.` });
+    }
   },
-  getMessagesBySender: async function (req, res, next) {},
-  updateMessagesCollection: async (req, res) => {
-    //   const messageToSave = req.body.data;
-    //   const messageFrom = messageToSave.from;
-    //   const messageTo = messageToSave.to;
-    //   const messageText = messageToSave.text;
-    //   try {
-    //     const newMessage = new Message({
-    //       from: messageFrom,
-    //       to: messageTo,
-    //       text: messageText,
-    //     });
-    //     const saveToDb = await newMessage.save();
-    //     if (saveToDb) {
-    //       res.status(200).json({ success: true });
-    //     }
-    //   } catch (err) {
-    //     console.error(err);
-    //     res.status(400).json({ success: false, error: `${err._message}.` });
-    //   }
+  getMessagesBySender: async function (req: Request, res: Response) {
+    try {
+      const sender = req.params.address.toLowerCase();
+      const messagesForSender = await Message.find({ from: sender }).sort("-timestamp").lean();
+      res.status(200).json({ success: true, data: messagesForSender });
+    } catch (err) {
+      res.status(CONSTANT.HTTPRESPONSE.CODE.INTERNAL_ERROR).json({ success: false, error: `${err._message}.` });
+    }
   },
 };

@@ -9,9 +9,13 @@ import * as dotenv from "dotenv";
 import cors = require("cors");
 import express = require("express");
 import morgan = require("morgan");
+import { rateLimit } from "express-rate-limit";
+import { rateLimiterConfig } from "./config/ratelimiter";
 
 // INITIALIZATIONS
 const app = express();
+//@ts-ignore
+const limiter = rateLimit(rateLimiterConfig);
 
 // CONFIGS
 dotenv.config({ path: __dirname + "/.env" });
@@ -27,6 +31,7 @@ app.use(express.json());
 
 //MIDDLEWARE
 app.use(morgan("dev"));
+app.use(limiter);
 
 // ROUTES
 app.use("/api", apiRoutes);

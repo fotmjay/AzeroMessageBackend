@@ -9,9 +9,6 @@ import { writeToDatabase } from "../services/writeToDatabase";
 import { explorerLinkFormatter } from "./explorerLinkFormatter";
 import { fetchLatestWasmTransactions } from "./fetchLatestWasmTransactions";
 
-const provider = new WsProvider(CONSTANT.PROVIDER);
-const api = new ApiPromise({ provider: provider, noInitWarn: true });
-
 export const runDatabaseUpdate = async () => {
   try {
     const data: TimestampBlock[] = await fetchLatestWasmTransactions();
@@ -22,20 +19,22 @@ export const runDatabaseUpdate = async () => {
 };
 
 export const requestEventOnChain = async (blocks: TimestampBlock[]) => {
+  const provider = new WsProvider(CONSTANT.PROVIDER);
+  const api = new ApiPromise({ provider: provider, noInitWarn: true });
   try {
     await api.isReady;
     const blockHashes = [];
     blocks.forEach(async ({ blockTimestamp, blockNumber, extrinsic_index }) => {
-      const blockHash = await getBlockHashFromBlockNumber(blockNumber);
-      const fullBlock = await getFullBlockFromBlockHash(blockHash);
-      getDecodedEmittedEventsFromFullBlock(fullBlock, blockTimestamp, extrinsic_index);
+      const blockHash = await getBlockHashFromBlockNumber(blockNumber, api);
+      const fullBlock = await getFullBlockFromBlockHash(blockHash, api);
+      getDecodedEmittedEventsFromFullBlock(fullBlock, blockTimestamp, extrinsic_index, api);
     });
   } catch (err) {
     console.error(err);
   }
 };
 
-const getBlockHashFromBlockNumber = async (blockNumber: number) => {
+const getBlockHashFromBlockNumber = async (blockNumber: number, api: ApiPromise) => {
   try {
     const blockHash = (await api.rpc.chain.getBlockHash(blockNumber)).toString();
     return blockHash;
@@ -44,7 +43,7 @@ const getBlockHashFromBlockNumber = async (blockNumber: number) => {
   }
 };
 
-const getFullBlockFromBlockHash = async (blockHash: string) => {
+const getFullBlockFromBlockHash = async (blockHash: string, api: ApiPromise) => {
   try {
     const fullBlock = await api.at(blockHash);
     return fullBlock;
@@ -56,7 +55,8 @@ const getFullBlockFromBlockHash = async (blockHash: string) => {
 const getDecodedEmittedEventsFromFullBlock = async (
   fullBlock: ApiDecoration<"promise">,
   blockTimestamp: number,
-  extrinsic_index
+  extrinsic_index,
+  api: ApiPromise
 ) => {
   try {
     const events = await fullBlock.query.system.events<EventRecord[]>();

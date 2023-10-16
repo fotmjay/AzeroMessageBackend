@@ -11,8 +11,8 @@ export interface Message {
 
 // 2. Create a Schema corresponding to the document interface.
 export const MessageSchema = new Schema<Message>({
-  from: { type: String, required: true, lowercase: true },
-  to: { type: String, required: true, lowercase: true },
+  from: { type: String, required: true },
+  to: { type: String, required: true },
   text: { type: String, required: true },
   timestamp: { type: Number, required: true },
   explorerLink: { type: String, required: true },

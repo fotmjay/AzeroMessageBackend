@@ -8,8 +8,8 @@ type MessageEvent = {
 
 export const writeToDatabase = async (event: MessageEvent, timestamp: number, link: string) => {
   const communication = new Message({
-    from: event.from.toLowerCase(),
-    to: event.to.toLowerCase(),
+    from: event.from,
+    to: event.to,
     text: event.text,
     timestamp: timestamp,
     explorerLink: link,

@@ -8,8 +8,6 @@ import { CONSTANT } from "../constants/constants";
 module.exports = {
   getMessagesByReceiver: async (req: Request, res: Response) => {
     try {
-      const data: TimestampBlock[] = await fetchLatestWasmTransactions();
-      requestEventOnChain(data);
       const receiver = req.params.address.toLowerCase();
       const messagesForReceiver = await Message.find({ to: receiver }).sort("-timestamp").lean();
       res.status(200).json({ success: true, data: messagesForReceiver });

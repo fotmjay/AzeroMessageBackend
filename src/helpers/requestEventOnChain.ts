@@ -7,9 +7,15 @@ import { EventRecord } from "@polkadot/types/interfaces";
 import { TimestampBlock } from "sample-polkadotjs-typegen/types/ApiTypes";
 import { writeToDatabase } from "../services/writeToDatabase";
 import { explorerLinkFormatter } from "./explorerLinkFormatter";
+import { fetchLatestWasmTransactions } from "./fetchLatestWasmTransactions";
 
 const provider = new WsProvider(CONSTANT.PROVIDER);
-const api = new ApiPromise({ provider: provider });
+const api = new ApiPromise({ provider: provider, noInitWarn: true });
+
+export const runDatabaseUpdate = async () => {
+  const data: TimestampBlock[] = await fetchLatestWasmTransactions();
+  requestEventOnChain(data);
+};
 
 export const requestEventOnChain = async (blocks: TimestampBlock[]) => {
   try {

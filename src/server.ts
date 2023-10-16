@@ -11,6 +11,7 @@ import express = require("express");
 import morgan = require("morgan");
 import { rateLimit } from "express-rate-limit";
 import { rateLimiterConfig } from "./config/ratelimiter";
+import { runDatabaseUpdate } from "./helpers/requestEventOnChain";
 
 // INITIALIZATIONS
 const app = express();
@@ -35,6 +36,10 @@ app.use(limiter);
 
 // ROUTES
 app.use("/api", apiRoutes);
+
+// Database update
+runDatabaseUpdate();
+setInterval(runDatabaseUpdate, 60000);
 
 // SERVER LAUNCH
 

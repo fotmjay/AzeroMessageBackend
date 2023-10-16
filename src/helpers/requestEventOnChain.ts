@@ -13,8 +13,12 @@ const provider = new WsProvider(CONSTANT.PROVIDER);
 const api = new ApiPromise({ provider: provider, noInitWarn: true });
 
 export const runDatabaseUpdate = async () => {
-  const data: TimestampBlock[] = await fetchLatestWasmTransactions();
-  requestEventOnChain(data);
+  try {
+    const data: TimestampBlock[] = await fetchLatestWasmTransactions();
+    requestEventOnChain(data);
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 export const requestEventOnChain = async (blocks: TimestampBlock[]) => {

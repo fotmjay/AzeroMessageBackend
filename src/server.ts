@@ -3,6 +3,7 @@ const PORT = process.env.PORT || 3000;
 
 //ROUTES
 const apiRoutes = require("./routes/api");
+const mainRoutes = require("./routes/main");
 
 // MODULES
 import * as dotenv from "dotenv";
@@ -36,10 +37,7 @@ app.use(limiter);
 
 // ROUTES
 app.use("/api", apiRoutes);
-
-// Database update
-runDatabaseUpdate();
-setInterval(runDatabaseUpdate, 60000);
+app.use("/", mainRoutes);
 
 // SERVER LAUNCH
 

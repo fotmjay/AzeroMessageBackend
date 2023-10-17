@@ -1,8 +1,5 @@
 import Message from "../models/Message";
 import { Request, Response } from "express";
-import { fetchLatestWasmTransactions } from "../helpers/fetchLatestWasmTransactions";
-import { requestEventOnChain } from "../helpers/requestEventOnChain";
-import { TimestampBlock } from "sample-polkadotjs-typegen/types/ApiTypes";
 import { CONSTANT } from "../constants/constants";
 
 module.exports = {

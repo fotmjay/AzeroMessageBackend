@@ -9,13 +9,15 @@ import { writeToDatabase } from "../services/writeToDatabase";
 import { explorerLinkFormatter } from "./explorerLinkFormatter";
 import { fetchLatestWasmTransactions } from "./fetchLatestWasmTransactions";
 
-export const runDatabaseUpdate = async () => {
+export const runDatabaseUpdate = async (req, res, next) => {
+  console.log("Updating database");
   try {
     const data: TimestampBlock[] = await fetchLatestWasmTransactions();
     requestEventOnChain(data);
   } catch (err) {
     console.error(err);
   }
+  next();
 };
 
 export const requestEventOnChain = async (blocks: TimestampBlock[]) => {

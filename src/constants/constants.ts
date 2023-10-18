@@ -18,6 +18,7 @@ export const CONSTANT = {
       OK: 200,
       BADREQUEST: 400,
       NOTFOUND: 404,
+      UNAUTHORIZED: 401,
       INTERNAL_ERROR: 500,
     },
   },

@@ -13,6 +13,7 @@ export const writeToDatabase = async (event: MessageEvent, timestamp: number, li
     text: event.text,
     timestamp: timestamp,
     explorerLink: link,
+    encrypted: false,
   });
   try {
     const saveToDb = await communication.save();

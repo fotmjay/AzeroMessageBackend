@@ -5,7 +5,7 @@ import { ApiPromise, WsProvider } from "@polkadot/api";
 import { CONSTANT } from "../constants/constants";
 import { EventRecord } from "@polkadot/types/interfaces";
 import { TimestampBlock } from "sample-polkadotjs-typegen/types/ApiTypes";
-import { writeToDatabase } from "../services/writeToDatabase";
+import { writeToDatabase } from "../middleware/writeToDatabase";
 import { explorerLinkFormatter } from "./explorerLinkFormatter";
 import { fetchLatestWasmTransactions } from "./fetchLatestWasmTransactions";
 

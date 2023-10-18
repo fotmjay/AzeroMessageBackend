@@ -3,6 +3,7 @@ const PORT = process.env.PORT || 3000;
 
 //ROUTES
 const apiRoutes = require("./routes/api");
+const authRoutes = require("./routes/auth");
 const mainRoutes = require("./routes/main");
 
 // MODULES
@@ -12,7 +13,6 @@ import express = require("express");
 import morgan = require("morgan");
 import { rateLimit } from "express-rate-limit";
 import { rateLimiterConfig } from "./config/ratelimiter";
-import { runDatabaseUpdate } from "./helpers/requestEventOnChain";
 
 // INITIALIZATIONS
 const app = express();
@@ -37,6 +37,7 @@ app.use(limiter);
 
 // ROUTES
 app.use("/api", apiRoutes);
+app.use("/auth", authRoutes);
 app.use("/", mainRoutes);
 
 // SERVER LAUNCH

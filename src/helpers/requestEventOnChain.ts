@@ -8,12 +8,14 @@ import { TimestampBlock } from "sample-polkadotjs-typegen/types/ApiTypes";
 import { writeToDatabase } from "../services/writeToDatabase";
 import { explorerLinkFormatter } from "./explorerLinkFormatter";
 import { fetchLatestWasmTransactions } from "./fetchLatestWasmTransactions";
+const connectDB = require("../config/database");
 
 export const runDatabaseUpdate = async (req, res, next) => {
-  console.log("Updating database");
   try {
+    await connectDB();
     const data: TimestampBlock[] = await fetchLatestWasmTransactions();
-    requestEventOnChain(data);
+    await requestEventOnChain(data);
+    console.log("Updating database");
   } catch (err) {
     console.error(err);
   }

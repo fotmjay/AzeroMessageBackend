@@ -63,7 +63,7 @@ module.exports = {
       }
     } catch (err) {}
   },
-  activateEncryption: async (req: Request, res: Response) => {
+  setPassword: async (req: Request, res: Response) => {
     res.status(200).end("success");
   },
 };

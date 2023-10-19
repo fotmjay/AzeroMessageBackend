@@ -7,6 +7,6 @@ router.get("/generateNonce/:address", authController.generateNonce);
 router.get("/generateNonce", authController.generateNonce);
 
 router.post("/confirmWallet", authController.confirmWallet);
-router.post("/activateEncryption", ensureAuth, authController.activateEncryption);
+router.post("/setPassword", ensureAuth, authController.setPassword);
 
 module.exports = router;

@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { createKey } from "../helpers/encryption";
 
 module.exports = {
   home: (req: Request, res: Response) => {

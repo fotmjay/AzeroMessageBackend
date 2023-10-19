@@ -1,38 +1,39 @@
 import crypto from "node:crypto";
 
-export const createKey = (passphrase: string) => {
-  async function generateKeyPair() {
-    try {
-      const keyPair = await new Promise((resolve, reject) => {
-        crypto.generateKeyPair(
-          "rsa",
-          {
-            modulusLength: 4096,
-            publicKeyEncoding: {
-              type: "spki",
-              format: "pem",
-            },
-            privateKeyEncoding: {
-              type: "pkcs8",
-              format: "pem",
-              cipher: "aes-256-cbc",
-              passphrase: passphrase,
-            },
+type Keypair = {
+  privateKey: string;
+  publicKey: string;
+};
+export const createKeyPair = async (passphrase: string): Promise<Keypair> => {
+  try {
+    const keyPair = await new Promise<Keypair>((resolve, reject) => {
+      crypto.generateKeyPair(
+        "rsa",
+        {
+          modulusLength: 4096,
+          publicKeyEncoding: {
+            type: "spki",
+            format: "pem",
           },
-          (err, publicKey, privateKey) => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve({ publicKey, privateKey });
-            }
+          privateKeyEncoding: {
+            type: "pkcs8",
+            format: "pem",
+            cipher: "aes-256-cbc",
+            passphrase: passphrase,
+          },
+        },
+        (err, publicKey, privateKey) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve({ publicKey, privateKey });
           }
-        );
-      });
-    } catch (err) {
-      console.error(err);
-    }
-
-    return generateKeyPair();
+        }
+      );
+    });
+    return keyPair;
+  } catch (err) {
+    console.error(err);
   }
 };
 

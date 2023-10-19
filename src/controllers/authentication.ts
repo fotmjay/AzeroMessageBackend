@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import User from "../models/User";
 import { validateSignature, addressFormatValidation } from "../helpers/validations";
 import { CONSTANT } from "../constants/constants";
+import { createKeyPair } from "../helpers/encryption";
 const jwt = require("jsonwebtoken");
 
 module.exports = {
@@ -54,8 +55,8 @@ module.exports = {
           exists.randomNonce = Math.ceil(Math.random() * 1_000_000_000).toString();
           await exists.save();
           res
-            .status(CONSTANT.HTTPRESPONSE.CODE.BADREQUEST)
-            .json({ success: true, token: token, error: "You are logged in." });
+            .status(CONSTANT.HTTPRESPONSE.CODE.OK)
+            .json({ success: true, token: token, message: "You are logged in." });
           return;
         } else {
           res.status(CONSTANT.HTTPRESPONSE.CODE.UNAUTHORIZED).end("Signed message invalid.");
@@ -64,6 +65,23 @@ module.exports = {
     } catch (err) {}
   },
   setPassword: async (req: Request, res: Response) => {
-    res.status(200).end("success");
+    const password = req.body.password;
+    try {
+      const keypair = await createKeyPair(password);
+      res.locals.user.encryptedPrivateKey = keypair.privateKey;
+      res.locals.user.publicKey = keypair.publicKey;
+      const saved = await res.locals.user.save();
+      if (saved) {
+        res
+          .status(CONSTANT.HTTPRESPONSE.CODE.OK)
+          .json({ success: true, token: res.locals.token, message: "Password successfully set." });
+      } else {
+        res
+          .status(CONSTANT.HTTPRESPONSE.CODE.INTERNAL_ERROR)
+          .json({ success: false, token: res.locals.token, error: "Your password could not be saved." });
+      }
+    } catch (err) {
+      console.error(err);
+    }
   },
 };

@@ -7,4 +7,7 @@ const apiController = require("../controllers/api");
 // Target = sender || receiver
 router.get("/messages/:target/:address", runDatabaseUpdate, apiController.getMessagesByTarget);
 
+// Return encryption key from database.
+router.get("/publickey/:address", apiController.getPublicEncryptionKey);
+
 module.exports = router;

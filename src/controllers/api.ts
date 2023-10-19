@@ -1,22 +1,26 @@
 import Message from "../models/Message";
 import { Request, Response } from "express";
 import { CONSTANT } from "../constants/constants";
+import { addressFormatValidation } from "../helpers/validations";
 
 module.exports = {
-  getMessagesByReceiver: async (req: Request, res: Response) => {
-    try {
-      const receiver = req.params.address;
-      const messagesForReceiver = await Message.find({ to: receiver }).sort("-timestamp").lean();
-      res.status(200).json({ success: true, data: messagesForReceiver });
-    } catch (err) {
-      res.status(CONSTANT.HTTPRESPONSE.CODE.INTERNAL_ERROR).json({ success: false, error: `${err._message}.` });
+  getMessagesByTarget: async (req: Request, res: Response) => {
+    const address = req.params.address;
+    if (req.params.target !== "receiver" && req.params.target !== "sender") {
+      res
+        .status(CONSTANT.HTTPRESPONSE.CODE.BADREQUEST)
+        .json({ success: false, error: `Use /api/messages/(receiver:sender)/:address to query the API.` });
+      return;
+    } else if (!addressFormatValidation(address)) {
+      res.status(CONSTANT.HTTPRESPONSE.CODE.BADREQUEST).json({ success: false, error: `Address format is invalid.` });
+      return;
     }
-  },
-  getMessagesBySender: async function (req: Request, res: Response) {
+    const target = req.params.target === "receiver" ? "to" : "from";
     try {
-      const sender = req.params.address;
-      const messagesForSender = await Message.find({ from: sender }).sort("-timestamp").lean();
-      res.status(200).json({ success: true, data: messagesForSender });
+      const messagesForTarget = await Message.find({ [target]: address })
+        .sort("-timestamp")
+        .lean();
+      res.status(200).json({ success: true, data: messagesForTarget });
     } catch (err) {
       res.status(CONSTANT.HTTPRESPONSE.CODE.INTERNAL_ERROR).json({ success: false, error: `${err._message}.` });
     }

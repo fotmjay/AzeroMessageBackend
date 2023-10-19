@@ -16,7 +16,10 @@ export const writeToDatabase = async (event: MessageEvent, timestamp: number, li
     encrypted: false,
   });
   try {
-    const saveToDb = await communication.save();
+    const exists = await Message.find({ from: event.from, to: event.to, timestamp: timestamp, text: event.text });
+    if (!exists) {
+      const saveToDb = await communication.save();
+    }
   } catch (err) {
     console.error(err);
   }

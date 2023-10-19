@@ -4,7 +4,7 @@ const router = express.Router();
 const apiController = require("../controllers/api");
 
 // Main app page
-router.get("/messages/receiver/:address", runDatabaseUpdate, apiController.getMessagesByReceiver);
-router.get("/messages/sender/:address", runDatabaseUpdate, apiController.getMessagesBySender);
+// Target = sender || receiver
+router.get("/messages/:target/:address", runDatabaseUpdate, apiController.getMessagesByTarget);
 
 module.exports = router;

@@ -34,15 +34,18 @@ module.exports = {
     }
     try {
       const userFound = await User.findOne({ relatedWalletAddress: address });
-      if (userFound.publicKey !== undefined) {
-        res.status(CONSTANT.HTTPRESPONSE.CODE.OK).json({ success: true, message: userFound.publicKey });
-        return;
-      } else {
-        res
-          .status(CONSTANT.HTTPRESPONSE.CODE.NOTFOUND)
-          .json({ success: false, error: `The owner has not yet activated encryption on this address.` });
+      if (userFound) {
+        if (userFound.publicKey !== undefined) {
+          res.status(CONSTANT.HTTPRESPONSE.CODE.OK).json({ success: true, message: userFound.publicKey });
+          return;
+        }
       }
+      res
+        .status(CONSTANT.HTTPRESPONSE.CODE.OK)
+        .json({ success: false, error: `The owner has not yet activated encryption on this address.` });
+      return;
     } catch (err) {
+      res.status(CONSTANT.HTTPRESPONSE.CODE.INTERNAL_ERROR).json({ success: false, message: "Unknown error" });
       console.error(err);
     }
   },

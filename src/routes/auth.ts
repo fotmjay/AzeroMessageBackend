@@ -1,7 +1,6 @@
 import express from "express";
 const router = express.Router();
 const authController = require("../controllers/authentication");
-const { ensureAuth } = require("../middleware/auth");
 
 // Get nonce (message to sign) to prove ownership with signature,
 // usually response is followed by a request to /confirmWallet or /setPassword

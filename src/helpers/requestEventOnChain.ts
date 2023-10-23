@@ -13,7 +13,7 @@ export const runDatabaseUpdate = async (req, res, next) => {
   console.log("Updating database");
   try {
     const data: TimestampBlock[] = await fetchLatestWasmTransactions();
-    requestEventOnChain(data);
+    await requestEventOnChain(data);
   } catch (err) {
     console.error(err);
   }

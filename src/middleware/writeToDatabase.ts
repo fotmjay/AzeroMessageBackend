@@ -16,7 +16,7 @@ export const writeToDatabase = async (event: MessageEvent, timestamp: number, li
     encrypted: false,
   });
   try {
-    const exists = await Message.find({ from: event.from, to: event.to, timestamp: timestamp, text: event.text });
+    const exists = await Message.findOne({ from: event.from, to: event.to, timestamp: timestamp, text: event.text });
     if (!exists) {
       const saveToDb = await communication.save();
     }

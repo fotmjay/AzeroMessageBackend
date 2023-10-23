@@ -2,8 +2,6 @@ import { Request, Response } from "express";
 import User from "../models/User";
 import { validateSignature, addressFormatValidation } from "../helpers/validations";
 import { CONSTANT } from "../constants/constants";
-import { createKeyPair } from "../helpers/encryption";
-const jwt = require("jsonwebtoken");
 
 module.exports = {
   getNonce: async (req: Request, res: Response) => {

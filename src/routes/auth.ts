@@ -3,11 +3,15 @@ const router = express.Router();
 const authController = require("../controllers/authentication");
 const { ensureAuth } = require("../middleware/auth");
 
+// Get nonce (message to sign) to prove ownership with signature,
+// usually response is followed by a request to /confirmWallet or /setPassword
 router.get("/getNonce/:address", authController.getNonce);
-// // failsafe with error message if reached
-// router.get("/getNonce", authController.getNonce);
 
+// Used to get encrypted private key WITHOUT changing password
 router.post("/confirmWallet", authController.confirmWallet);
+
+// Used to SET encrypted private key (enable encryption or change password)
+// with a fresh password
 router.post("/setPassword", authController.setPassword);
 
 module.exports = router;

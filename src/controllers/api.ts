@@ -36,7 +36,11 @@ module.exports = {
       const userFound = await User.findOne({ relatedWalletAddress: address });
       if (userFound) {
         if (userFound.publicKey !== undefined) {
-          res.status(CONSTANT.HTTPRESPONSE.CODE.OK).json({ success: true, message: userFound.publicKey });
+          res.status(CONSTANT.HTTPRESPONSE.CODE.OK).json({
+            success: true,
+            message: "Encryption enabled on target account, public key sent.",
+            publicKey: userFound.publicKey,
+          });
           return;
         }
       }
@@ -49,5 +53,4 @@ module.exports = {
       console.error(err);
     }
   },
-  getEncryptedPrivateKey: async (req: Request, res: Response) => {},
 };

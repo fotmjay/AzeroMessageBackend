@@ -15,7 +15,7 @@ module.exports = {
     try {
       const exists = await User.findOne({ relatedWalletAddress: walletAddress });
       if (exists) {
-        res.status(200).json({ success: true, randomNonce: exists.randomNonce });
+        res.status(200).json({ success: true, randomNonce: exists.randomNonce, publicKey: exists.publicKey });
       } else {
         const newUser = await User.create({
           relatedWalletAddress: walletAddress,

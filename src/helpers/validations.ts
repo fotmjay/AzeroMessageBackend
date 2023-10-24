@@ -19,7 +19,6 @@ export const validateSignature = async (signedMessage: string, signature: string
   //Some interfaces, such as using sr25519 however are only available via WASM
   await cryptoWaitReady();
   const isValid = isValidSignature(signedMessage, signature, publicAddress);
-  console.log(isValid);
   return isValid;
 };
 

@@ -4,6 +4,7 @@ type MessageEvent = {
   from: string;
   to: string;
   text: string;
+  encrypted: string;
 };
 
 export const writeToDatabase = async (event: MessageEvent, timestamp: number, link: string) => {
@@ -13,7 +14,7 @@ export const writeToDatabase = async (event: MessageEvent, timestamp: number, li
     text: event.text,
     timestamp: timestamp,
     explorerLink: link,
-    encrypted: false,
+    encrypted: event.encrypted === "true" ? true : false,
   });
   try {
     const exists = await Message.findOne({ from: event.from, to: event.to, timestamp: timestamp, text: event.text });

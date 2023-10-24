@@ -1,4 +1,4 @@
-import metadata = require("../assets/metadata.json");
+import metadata = require("../assets/azero_message.json");
 import { Abi } from "@polkadot/api-contract";
 import { ApiDecoration } from "@polkadot/api/types";
 import { ApiPromise, WsProvider } from "@polkadot/api";
@@ -75,7 +75,12 @@ const getDecodedEmittedEventsFromFullBlock = async (
               extrinsic_index
             );
             writeToDatabase(
-              { from: decoded.args[0].toString(), to: decoded.args[1].toString(), text: decoded.args[2].toString() },
+              {
+                from: decoded.args[0].toString(),
+                to: decoded.args[1].toString(),
+                text: decoded.args[2].toString(),
+                encrypted: decoded.args[3].toString(),
+              },
               blockTimestamp,
               explorerLink
             );

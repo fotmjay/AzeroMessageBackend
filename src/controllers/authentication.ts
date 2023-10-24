@@ -52,6 +52,7 @@ module.exports = {
             success: true,
             hasKey: secretKeyExists,
             encryptedPrivateKey: exists.encryptedPrivateKey || undefined,
+            publicKey: exists.publicKey,
             message: `Successfully confirmed ownership${secretKeyExists && ", encrypted key sent"}.`,
           });
           return;

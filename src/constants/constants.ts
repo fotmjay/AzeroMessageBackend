@@ -8,7 +8,7 @@ export const CONSTANT = {
     },
   },
   CONTRACT: {
-    ADDRESS: "5GEDATiqzWkVu98jdSi2EuJ2Xtee2KoB7fMoRnJPTVAvqoVq",
+    ADDRESS: "5HBYqDMzTQFTux4Nx2Lez9ruuuFUrzdMsmkXAUcNJBpUpHx9",
     METHODS: {
       MESSAGESENT: "MessageSent",
     },
@@ -23,3 +23,5 @@ export const CONSTANT = {
     },
   },
 };
+
+// previous contract:  5GEDATiqzWkVu98jdSi2EuJ2Xtee2KoB7fMoRnJPTVAvqoVq

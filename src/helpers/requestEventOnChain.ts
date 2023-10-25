@@ -1,11 +1,11 @@
-import metadata = require("../assets/metadata.json");
+import metadata = require("../assets/azero_message.json");
 import { Abi } from "@polkadot/api-contract";
 import { ApiDecoration } from "@polkadot/api/types";
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { CONSTANT } from "../constants/constants";
 import { EventRecord } from "@polkadot/types/interfaces";
 import { TimestampBlock } from "sample-polkadotjs-typegen/types/ApiTypes";
-import { writeToDatabase } from "../services/writeToDatabase";
+import { writeToDatabase } from "../middleware/writeToDatabase";
 import { explorerLinkFormatter } from "./explorerLinkFormatter";
 import { fetchLatestWasmTransactions } from "./fetchLatestWasmTransactions";
 const connectDB = require("../config/database");
@@ -77,7 +77,12 @@ const getDecodedEmittedEventsFromFullBlock = async (
               extrinsic_index
             );
             writeToDatabase(
-              { from: decoded.args[0].toString(), to: decoded.args[1].toString(), text: decoded.args[2].toString() },
+              {
+                from: decoded.args[0].toString(),
+                to: decoded.args[1].toString(),
+                text: decoded.args[2].toString(),
+                encrypted: decoded.args[3].toString(),
+              },
               blockTimestamp,
               explorerLink
             );

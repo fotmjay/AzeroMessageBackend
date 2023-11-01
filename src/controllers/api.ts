@@ -26,6 +26,16 @@ module.exports = {
       res.status(CONSTANT.HTTPRESPONSE.CODE.INTERNAL_ERROR).json({ success: false, error: `${err._message}.` });
     }
   },
+  getLatestMessages: async (req: Request, res: Response) => {
+    try {
+      const latestMessages = await Message.find({ encrypted: false }).sort({ _id: -1 }).limit(10).lean();
+      if (latestMessages) {
+        res.status(200).json({ success: true, data: latestMessages });
+      }
+    } catch (err) {
+      res.status(CONSTANT.HTTPRESPONSE.CODE.INTERNAL_ERROR).json({ success: false, error: `${err._message}.` });
+    }
+  },
   getPublicEncryptionKey: async (req: Request, res: Response) => {
     const address = req.params.address;
     if (!addressFormatValidation(address)) {

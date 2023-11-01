@@ -3,7 +3,9 @@ import { runDatabaseUpdate } from "../helpers/requestEventOnChain";
 const router = express.Router();
 const apiController = require("../controllers/api");
 
-// Main app page
+// Latest messages
+router.get("/messages/latest", runDatabaseUpdate, apiController.getLatestMessages);
+
 // Target = sender || receiver
 router.get("/messages/:target/:address", runDatabaseUpdate, apiController.getMessagesByTarget);
 

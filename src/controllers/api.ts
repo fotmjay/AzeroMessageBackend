@@ -28,7 +28,7 @@ module.exports = {
   },
   getLatestMessages: async (req: Request, res: Response) => {
     try {
-      const latestMessages = await Message.find({ encrypted: false }).sort({ _id: -1 }).limit(10).lean();
+      const latestMessages = await Message.find({ encrypted: false }).sort({ timestamp: -1 }).limit(10).lean();
       if (latestMessages) {
         res.status(200).json({ success: true, data: latestMessages });
       }

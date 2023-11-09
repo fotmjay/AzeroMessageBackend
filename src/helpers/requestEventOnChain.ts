@@ -63,6 +63,7 @@ const getDecodedEmittedEventsFromFullBlock = async (
   api: ApiPromise
 ) => {
   try {
+    const eventCache = [];
     const events = await fullBlock.query.system.events<EventRecord[]>();
     events.forEach(({ event }) => {
       if (api.events.contracts.ContractEmitted.is(event)) {
@@ -76,16 +77,23 @@ const getDecodedEmittedEventsFromFullBlock = async (
               CONSTANT.EXPLORER.ENDPOINTS.EXTRINSIC,
               extrinsic_index
             );
-            writeToDatabase(
-              {
-                from: decoded.args[0].toString(),
-                to: decoded.args[1].toString(),
-                text: decoded.args[2].toString(),
-                encrypted: decoded.args[3].toString(),
-              },
-              blockTimestamp,
-              explorerLink
-            );
+            const emittedEventToSave = {
+              from: decoded.args[0].toString(),
+              to: decoded.args[1].toString(),
+              text: decoded.args[2].toString(),
+              encrypted: decoded.args[3].toString(),
+            };
+            if (
+              eventCache.findIndex(
+                (event) =>
+                  event.from === emittedEventToSave.from &&
+                  event.to === emittedEventToSave.to &&
+                  event.text === emittedEventToSave.text
+              ) === -1
+            ) {
+              eventCache.push(emittedEventToSave);
+              writeToDatabase(emittedEventToSave, blockTimestamp, explorerLink);
+            }
           }
         }
       }

@@ -20,7 +20,7 @@ export const fetchLatestWasmTransactions = async () => {
         const blockNumber = parseInt(tx.extrinsic_index, 10);
         const extrinsic_index = tx.extrinsic_index;
         const blockTimestamp = tx.block_timestamp;
-        if (latestAdded === null || blockTimestamp > latestAdded.timestamp) {
+        if (latestAdded === null || blockTimestamp >= latestAdded.timestamp) {
           allBlocksWithTransactions.push({ blockNumber, blockTimestamp, extrinsic_index });
         }
       });

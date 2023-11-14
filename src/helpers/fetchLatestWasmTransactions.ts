@@ -16,14 +16,16 @@ export const fetchLatestWasmTransactions = async () => {
     });
     if (transactionData) {
       const txList = transactionData.data.data.list;
-      txList.forEach((tx) => {
-        const blockNumber = parseInt(tx.extrinsic_index, 10);
-        const extrinsic_index = tx.extrinsic_index;
-        const blockTimestamp = tx.block_timestamp;
-        if (latestAdded === null || blockTimestamp >= latestAdded.timestamp) {
-          allBlocksWithTransactions.push({ blockNumber, blockTimestamp, extrinsic_index });
-        }
-      });
+      if (txList !== null) {
+        txList.forEach((tx) => {
+          const blockNumber = parseInt(tx.extrinsic_index, 10);
+          const extrinsic_index = tx.extrinsic_index;
+          const blockTimestamp = tx.block_timestamp;
+          if (latestAdded === null || blockTimestamp >= latestAdded.timestamp) {
+            allBlocksWithTransactions.push({ blockNumber, blockTimestamp, extrinsic_index });
+          }
+        });
+      }
       return allBlocksWithTransactions;
     }
   } catch (err) {

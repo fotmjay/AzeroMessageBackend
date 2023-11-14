@@ -29,8 +29,9 @@ module.exports = {
   getLatestMessages: async (req: Request, res: Response) => {
     try {
       const latestMessages = await Message.find({ encrypted: false }).sort({ timestamp: -1 }).limit(10).lean();
-      if (latestMessages) {
-        res.status(200).json({ success: true, data: latestMessages });
+      const amountOfMessages = await Message.countDocuments();
+      if (latestMessages && amountOfMessages) {
+        res.status(200).json({ success: true, data: latestMessages, amountOfMessages: amountOfMessages });
       }
     } catch (err) {
       res.status(CONSTANT.HTTPRESPONSE.CODE.INTERNAL_ERROR).json({ success: false, error: `${err._message}.` });
